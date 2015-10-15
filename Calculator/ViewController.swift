@@ -12,8 +12,20 @@ class ViewController: UIViewController
 {
     
     @IBOutlet weak var display: UILabel!
+    @IBOutlet weak var historyDisplay: UILabel!
 
     var userIsInTheMiddleOfTypingNumber: Bool = false
+    var decimalPressed: Bool = false
+    
+    @IBAction func appendDecimal() {
+        if decimalPressed {
+            return
+        }
+        else{
+            decimalPressed = true
+            display.text = display.text! + "."
+        }
+    }
     
     @IBAction func appendDigit(sender: UIButton) {
         let digit = sender.currentTitle!
@@ -37,7 +49,10 @@ class ViewController: UIViewController
         case "+": performOperation { $0 + $1 }
         case "−": performOperation { $1 - $0 }
         case "√": performOperation1 { sqrt($0) }
-            default: break
+        case "sin": performOperation1 { sin($0) }
+        case "cos": performOperation1 { cos($0) }
+        case "π" : performOperation1 { $0 * 3.14 }
+        default: break
         }
     }
     
@@ -53,16 +68,18 @@ class ViewController: UIViewController
             displayValue = operation(operandStack.removeLast())
             enter()
         }
-    }
-    
-    func multiply(op1: Double, op2: Double) -> Double {
-        return op1 * op2
+        else{
+            displayValue = 3.14
+            enter()
+        }
+        
     }
     
     var operandStack = Array<Double>()
     
     @IBAction func enter() {
         userIsInTheMiddleOfTypingNumber = false
+        decimalPressed = false
         operandStack.append(displayValue)
         print("operandStack = \(operandStack)")
         
@@ -77,5 +94,8 @@ class ViewController: UIViewController
             userIsInTheMiddleOfTypingNumber = false
         }
     }
+    
+
+
 }
 
